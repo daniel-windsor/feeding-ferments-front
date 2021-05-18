@@ -1,38 +1,39 @@
-.App {
-  text-align: center;
+body {
+  overflow-x: hidden;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.fade-enter {
+  opacity: 0.01;
+}
+.fade-enter.fade-enter-active {
+  opacity: 1;
+  transition: opacity 15000ms ease-in;
+}
+.fade-exit {
+  opacity: 1;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.fade-exit.fade-exit-active {
+  opacity: 0.01;
+  transition: opacity 15000ms ease-in;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.auth-enter {
+  opacity: 0.01;
+  width: 0;
+}
+.auth-enter.auth-enter-active {
+  opacity: 1;
+  width: 500px;
+  transition: all 200ms ease-in;
+}
+.auth-exit {
+  opacity: 1;
+  width: 500px
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.auth-exit.auth-exit-active {
+  opacity: 0.01;
+  width: 0;
+  transition: all 200ms ease-in;
 }
