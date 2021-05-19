@@ -1,12 +1,38 @@
-import React from 'react'
+import Container from '@material-ui/core/Container'
+import Fab from '@material-ui/core/Fab'
+import { makeStyles } from '@material-ui/core/styles'
 
-import { useFirebaseStore } from '../../store'
+import AddIcon from '@material-ui/icons/Add'
+
+import { useFermentStore } from '../../store'
+import FermentForm from './FermentForm'
+import FermentCardContainer from './FermentCardContainer'
+
+const useStyles = makeStyles(theme => ({
+  fab: {
+    position: 'absolute',
+    bottom: theme.spacing(6),
+    right: theme.spacing(6)
+  },
+  root: {
+    marginTop: theme.spacing(6)
+  }
+}))
 
 const Dashboard = () => {
-  const { user } = useFirebaseStore()
+  const classes = useStyles()
+  const fermentStore = useFermentStore()
 
   return (
-    <h1>{user?.displayName}</h1>
+    <Container className={classes.root}>
+      <FermentCardContainer />
+
+      <Fab color='primary' className={classes.fab} onClick={() => fermentStore.toggleFermentForm()}>
+        <AddIcon />
+      </Fab>
+
+      <FermentForm />
+    </Container>
   )
 }
 

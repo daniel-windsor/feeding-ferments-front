@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import { useFormik } from 'formik'
 import firebase from 'firebase/app'
 
-import { LoginCredentials } from '../../types/user'
+import { ILoginCredentials } from '../../types/user'
 
 import TextField from '@material-ui/core/TextField'
 import Button from "@material-ui/core/Button"
@@ -30,10 +30,10 @@ const LoginForm = () => {
       password: ''
     },
     validationSchema: LoginSchema,
-    onSubmit: async (values: LoginCredentials) => {
+    onSubmit: async (values: ILoginCredentials) => {
       await firebase.auth().signInWithEmailAndPassword(values.email, values.password)
       firebaseStore.toggleAuth()
-      history.replace(`/${firebaseStore.user?.displayName}`)
+      history.replace('/dashboard')
     }
   })
 

@@ -1,16 +1,16 @@
-export interface LoginCredentials { 
+export interface ILoginCredentials { 
   email: string,
   password: string
 };
 
-export interface RegisterCredentials {
+export interface IRegisterCredentials {
   displayName: string,
   email: string,
   password: string,
   passwordConf: string
 }
 
-export interface User {
+export interface IUser {
   displayName: string,
   email: string,
   uid: string

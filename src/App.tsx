@@ -7,21 +7,23 @@ import {
 } from 'react-router-dom'
 import './App.css';
 
-import { createMuiTheme } from "@material-ui/core/styles";
+import { createMuiTheme, responsiveFontSizes } from "@material-ui/core/styles";
 import { ThemeProvider } from "@material-ui/styles";
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import {
-  FirebaseStoreProvider
+  FirebaseStoreProvider,
+  FermentStoreProvider
 } from './store'
 
 import LoadingRoute from './components/common/LoadingRoute'
 
-import NavBar from './components/Nav/Navbar'
+import NavBar from './components/nav/Navbar'
 import AuthContainer from './components/auth/AuthContainer'
 import Dashboard from './components/dashboard/Dashboard'
+import FermentProfile from './components/ferment/FermentProfile';
 
-const theme = createMuiTheme({
+let theme = createMuiTheme({
   props: {
     MuiTextField: {
       variant: "filled"
@@ -48,6 +50,8 @@ const theme = createMuiTheme({
   }
 })
 
+theme = responsiveFontSizes(theme)
+
 const AppWrapper = () => {
   return (
     <Router>
@@ -66,16 +70,16 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <CssBaseline>
           <FirebaseStoreProvider>
-
-              <Route path='/' component={NavBar} />
-
-              <Route exact path='/' component={AuthContainer} />
-
-              <Suspense fallback={<LoadingRoute />}>
-                <Switch location={location}>
-                  <Route path='/:displayName' component={Dashboard} />
-                </Switch>
-              </Suspense>
+            <Route path='/' component={NavBar} />
+            <Route exact path='/' component={AuthContainer} />
+            <Suspense fallback={<LoadingRoute />}>
+              <Switch location={location}>
+                <FermentStoreProvider>
+                  <Route exact path='/dashboard' component={Dashboard} />
+                  <Route exact path='/ferment/:fermentId' component={FermentProfile} />
+                </FermentStoreProvider>
+              </Switch>
+            </Suspense>
           </FirebaseStoreProvider>
         </CssBaseline>
       </ThemeProvider>

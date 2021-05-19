@@ -5,8 +5,8 @@ import "firebase/auth";
 
 import RootStore from "./RootStore";
 
-import { register } from "../api/auth";
-import { RegisterCredentials, User } from "../types/user";
+import { login, register } from "../api/auth";
+import { IRegisterCredentials, IUser } from "../types/user";
 
 const firebaseConfig = {
   apiKey: "AIzaSyABFm-gmI9oX9-z9ce9qb-M7FuKQwY29EE",
@@ -28,23 +28,16 @@ export default class FirebaseStore {
       firebase.auth();
 
       firebase.auth().onAuthStateChanged(async (user) => {
-        if (user) {
-          this.user = {
-            displayName: user.displayName || "user",
-            email: user.email || "",
-            uid: user.uid,
-          };
-          console.log("logged in");
-        } else {
-          console.log("logged out");
-        }
+        if (user) this.login(user);
+        else console.log("logged out");
       });
     }
   }
 
   // <--- Observables --->
 
-  @persist("object") @observable public user?: User;
+  @persist("object") @observable public user?: IUser;
+  @observable public token?: string = "";
 
   @observable showAuth = false;
   @observable authType = "";
@@ -63,16 +56,36 @@ export default class FirebaseStore {
 
   // <--- Flows --->
 
+  login = flow(function* (this: FirebaseStore, user: any) {
+    this.user = {
+      displayName: user.displayName || "user",
+      email: user.email || "",
+      uid: user.uid,
+    };
+
+    const token = yield firebase.auth().currentUser?.getIdToken();
+    if (token) {
+      localStorage.setItem("token", token);
+      this.rootStore.fermentStore.getAllFerments()
+    }
+
+    console.log("logged in");
+  });
+
   logout = flow(function* (this: FirebaseStore) {
     try {
       yield firebase.auth().signOut();
       this.user = undefined;
+      localStorage.clear();
     } catch (err) {
       console.log(err);
     }
   });
 
-  register = flow(function* (this: FirebaseStore, values: RegisterCredentials) {
+  register = flow(function* (
+    this: FirebaseStore,
+    values: IRegisterCredentials
+  ) {
     yield register(values);
 
     yield firebase

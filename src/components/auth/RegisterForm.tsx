@@ -2,7 +2,7 @@ import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
 
-import { RegisterCredentials } from '../../types/user'
+import { IRegisterCredentials } from '../../types/user'
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -35,9 +35,9 @@ const RegisterForm = () => {
       passwordConf: ''
     },
     validationSchema: RegisterSchema,
-    onSubmit: async (values: RegisterCredentials) => {
+    onSubmit: async (values: IRegisterCredentials) => {
       await firebaseStore.register(values)
-      history.replace(`/${firebaseStore.user?.displayName}`)
+      history.replace('/dashboard')
     }
   })
 
