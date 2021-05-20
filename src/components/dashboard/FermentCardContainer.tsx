@@ -10,8 +10,8 @@ const FermentCardContainer = () => {
 
   return (
     <Grid container spacing={2}>
-      {fermentStore.ferments.map(ferment => (
-        <Grid item key={ferment._id} xs={12} sm={6} md={4} lg={3}>
+      {fermentStore.ferments.map((ferment) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={ferment._id}>
           <FermentCard {...ferment} />
         </Grid>
       ))}

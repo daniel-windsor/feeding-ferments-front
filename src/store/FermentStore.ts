@@ -15,7 +15,6 @@ export default class FermentStore {
   @observable ferments = Array<IFerment>();
   @observable activeFerment: IFerment | undefined;
 
-  @observable createFermentErr = "";
 
   // <--- Actions --->
 
@@ -33,7 +32,7 @@ export default class FermentStore {
       const { data } = yield getAllFerments();
       this.ferments = data.ferments;
     } catch (err) {
-      this.createFermentErr = err.message;
+      throw err
     }
   });
 
@@ -44,17 +43,18 @@ export default class FermentStore {
       this.ferments = [...this.ferments, data.ferment]
       this.toggleFermentForm()
     } catch (err) {
-      this.createFermentErr = err.message;
+      throw err
     }
   });
 
   deleteFerment = flow(function* (this: FermentStore, fermentId: string) {
     try {
+      this.ferments = this.ferments.filter(ferment => ferment._id !== fermentId)
+
       yield deleteFerment(fermentId)
 
-      this.ferments = this.ferments.filter(ferment => ferment._id !== fermentId)
     } catch (err) {
-      console.log(err)
+      throw err
     }
   })
 }

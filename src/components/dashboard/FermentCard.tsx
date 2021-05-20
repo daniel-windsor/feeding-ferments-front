@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { IFerment } from '../../types/ferment'
 import { useFermentStore } from '../../store'
 
-interface IProps extends IFerment {}
+interface IProps extends IFerment { }
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,13 +19,21 @@ const useStyles = makeStyles(theme => ({
     height: "100%",
     cursor: 'pointer'
   },
-  image: {
-    minHeight: 100
+  imageContainer: {
+    height: 200,
+    width: "100%",
+    overflow: "hidden"
   },
-  text: {
-    // padding: 18
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "center"
+  },
+  textContainer: {
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
   }
-
 }))
 
 const FermentCard = (props: IProps) => {
@@ -39,21 +47,19 @@ const FermentCard = (props: IProps) => {
   }
 
   return (
-    <Fade in={true} timeout={150}>
-      <Paper className={classes.root} onClick={handleSelect}>
-        <div className={classes.image}>
-
-        </div>
-        <Container className={classes.text}>
-          <Typography variant='h4'>
-            {props.name}
-          </Typography>
-          <Typography variant='h6'>
-            {props.type}
-          </Typography>
-        </Container>
-      </Paper>
-    </Fade>
+    <Paper className={classes.root} onClick={handleSelect}>
+      <div className={classes.imageContainer}>
+        <img className={classes.image} src="http://cdn.everybodylovesitalian.com/wp-content/uploads/2018/09/italian-bread.jpg" />
+      </div>
+      <Container className={classes.textContainer}>
+        <Typography variant='h4'>
+          {props.name}
+        </Typography>
+        <Typography variant='h6'>
+          {props.type}
+        </Typography>
+      </Container>
+    </Paper>
   )
 
 }

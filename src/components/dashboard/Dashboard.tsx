@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import AddIcon from '@material-ui/icons/Add'
 
 import { useFermentStore } from '../../store'
-import FermentForm from './FermentForm'
 import FermentCardContainer from './FermentCardContainer'
 
 const useStyles = makeStyles(theme => ({
@@ -30,8 +29,6 @@ const Dashboard = () => {
       <Fab color='primary' className={classes.fab} onClick={() => fermentStore.toggleFermentForm()}>
         <AddIcon />
       </Fab>
-
-      <FermentForm />
     </Container>
   )
 }

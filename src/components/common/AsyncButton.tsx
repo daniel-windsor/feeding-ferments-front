@@ -43,6 +43,7 @@ const AsyncButton = (props: IProps) => {
 
     if (status === buttonStatus.submitting && !props.isSubmitting && !props.isSuccess) {
       setStatus(buttonStatus.error)
+
       setTimeout(() => {
         setStatus(buttonStatus.init)
       }, 1500)
@@ -52,10 +53,9 @@ const AsyncButton = (props: IProps) => {
   useEffect(() => {
     if (props.isSuccess) {
       setStatus(buttonStatus.success)
+
       setTimeout(() => {
         props.successCallback()
-        setStatus(buttonStatus.init)
-        console.log('async complete')
       }, 1500)
     }
   }, [props.isSuccess])

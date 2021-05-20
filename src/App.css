@@ -37,3 +37,22 @@ body {
   transform: translateX(-100%);
   transition: all 200ms linear;
 }
+
+.slide-up-enter {
+  opacity: 0.1;
+  transform: translateY(15px);
+}
+.slide-up-enter.slide-up-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 150ms linear;
+}
+.slide-up-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-up-exit.slide-up-exit-active {
+  opacity: 0.1;
+  transition: all 150ms linear;
+}
