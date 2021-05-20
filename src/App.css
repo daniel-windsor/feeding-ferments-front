@@ -7,7 +7,7 @@ body {
 }
 .fade-enter.fade-enter-active {
   opacity: 1;
-  transition: opacity 15000ms ease-in;
+  transition: opacity 200ms ease-in;
 }
 .fade-exit {
   opacity: 1;
@@ -15,25 +15,25 @@ body {
 
 .fade-exit.fade-exit-active {
   opacity: 0.01;
-  transition: opacity 15000ms ease-in;
+  transition: opacity 200ms ease;
 }
 
-.auth-enter {
-  opacity: 0.01;
-  width: 0;
+.slide-enter {
+  opacity: 0.1;
+  transform: translateX(100%);
 }
-.auth-enter.auth-enter-active {
+.slide-enter.slide-enter-active {
   opacity: 1;
-  width: 500px;
-  transition: all 200ms ease-in;
+  transform: translateX(0);
+  transition: all 200ms linear;
 }
-.auth-exit {
+.slide-exit {
   opacity: 1;
-  width: 500px
+  transform: translateX(0);
 }
 
-.auth-exit.auth-exit-active {
-  opacity: 0.01;
-  width: 0;
-  transition: all 200ms ease-in;
+.slide-exit.slide-exit-active {
+  opacity: 0.1;
+  transform: translateX(-100%);
+  transition: all 200ms linear;
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
@@ -5,7 +6,8 @@ import { useFormik } from 'formik'
 import { IRegisterCredentials } from '../../types/user'
 
 import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
+import Typography from '@material-ui/core/Typography'
+import AsyncButton from '../common/AsyncButton'
 
 import { useFirebaseStore } from '../../store'
 
@@ -26,6 +28,8 @@ const RegisterSchema = Yup.object().shape({
 const RegisterForm = () => {
   const history = useHistory()
   const firebaseStore = useFirebaseStore()
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState<string | undefined>()
 
   const formik = useFormik({
     initialValues: {
@@ -35,11 +39,21 @@ const RegisterForm = () => {
       passwordConf: ''
     },
     validationSchema: RegisterSchema,
-    onSubmit: async (values: IRegisterCredentials) => {
-      await firebaseStore.register(values)
-      history.replace('/dashboard')
+    onSubmit: (values: IRegisterCredentials) => {
+      if (error) setError(undefined)
+      firebaseStore.signUp(values)
+        .then(() => setSuccess(true))
+        .catch(err => {
+          setError(err.response.data.message)
+          formik.setSubmitting(false)
+        })
     }
   })
+
+  const successCallback = () => {
+    history.replace('/dashboard')
+    firebaseStore.toggleAuth()
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -85,12 +99,18 @@ const RegisterForm = () => {
         fullWidth
       />
 
-      <Button
-        type='submit'
-        variant='contained'
-        color='primary'
+      <AsyncButton
+        text="Sign Up"
+        onClick={formik.handleSubmit}
+        isSubmitting={formik.isSubmitting}
+        isSuccess={success}
+        successCallback={successCallback}
         fullWidth
-      >Sign Up</Button>
+      />
+
+      {Boolean(error) &&
+        <Typography variant='subtitle2'>{error}</Typography>
+      }
     </form>
   )
 }

@@ -30,10 +30,27 @@ let theme = createMuiTheme({
     },
   },
   overrides: {
+    MuiFormControl:  {
+      root: {
+        position: 'relative'
+      }
+    },
     MuiTextField: {
       root: {
-        marginTop: 12,
-        marginBottom: 12,
+        // marginTop: 18,
+        marginBottom: 24,
+      },
+    },
+    MuiFormHelperText: {
+      root: {
+        position: "absolute",
+        bottom: -20,
+        left: 0
+      }
+    },
+    MuiButton: {
+      root: {  
+        minHeight: 36
       }
     }
   },
@@ -44,8 +61,17 @@ let theme = createMuiTheme({
     secondary: {
       main: "#6E8D80"
     },
+    warning:  {
+      main: "#381e21"
+    },
     background: {
       default: "#D6D4C4"
+    }
+  },
+  typography: {
+    subtitle2: {
+      color: "red",
+      marginTop: 12
     }
   }
 })

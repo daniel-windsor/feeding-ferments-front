@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useFormik } from 'formik'
@@ -6,11 +7,13 @@ import firebase from 'firebase/app'
 import { ILoginCredentials } from '../../types/user'
 
 import TextField from '@material-ui/core/TextField'
-import Button from "@material-ui/core/Button"
+
+import AsyncButton from "../common/AsyncButton"
 
 import {
   useFirebaseStore
 } from '../../store'
+import { Typography } from '@material-ui/core'
 
 const LoginSchema = Yup.object().shape({
   email: Yup.string()
@@ -23,6 +26,8 @@ const LoginSchema = Yup.object().shape({
 const LoginForm = () => {
   const history = useHistory()
   const firebaseStore = useFirebaseStore()
+  const [success, setSuccess] = useState(false)
+  const [error, setError] = useState<string | undefined>()
 
   const formik = useFormik({
     initialValues: {
@@ -31,11 +36,21 @@ const LoginForm = () => {
     },
     validationSchema: LoginSchema,
     onSubmit: async (values: ILoginCredentials) => {
-      await firebase.auth().signInWithEmailAndPassword(values.email, values.password)
-      firebaseStore.toggleAuth()
-      history.replace('/dashboard')
+      if (error) setError(undefined)
+      try {
+        await firebase.auth().signInWithEmailAndPassword(values.email, values.password)
+        setSuccess(true)
+      } catch (err) {
+        setError('Incorrect email or password')
+        formik.setSubmitting(false)
+      }
     }
   })
+
+  const successCallback = () => {
+    history.replace('/dashboard')
+    firebaseStore.toggleAuth()
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -60,12 +75,18 @@ const LoginForm = () => {
         fullWidth
       />
 
-      <Button
-        type='submit'
-        variant='contained'
-        color='primary'
+      <AsyncButton
+        text="Log in"
+        onClick={formik.handleSubmit}
+        isSubmitting={formik.isSubmitting}
+        isSuccess={success}
+        successCallback={successCallback}
         fullWidth
-      >Log in</Button>
+      />
+
+      {Boolean(error) &&
+        <Typography variant='subtitle2'>{error}</Typography>
+      }
     </form>
   )
 }

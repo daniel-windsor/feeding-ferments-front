@@ -1,19 +1,28 @@
-import axios from "axios";
+import client from "./client";
 
 import { IRegisterCredentials } from "../types/user";
 
+const axios = client()
+
 export const login = async (token: string) => {
   return await axios
-    .post("http://localhost:3030/user/login", { token })
+    .post("/user/login", { token })
     .then((res) => {
       console.log(res)
     })
-    .catch((err) => console.log(err));
+    .catch((err) => { throw err });
 };
 
-export const register = async (credentials: IRegisterCredentials) => {
+export const signUp = async (credentials: IRegisterCredentials) => {
   return await axios
-    .post("http://localhost:3030/user/register", credentials)
+    .post("/user/signUp", credentials)
     .then((res) => res)
-    .catch((err) => console.log(err));
-};
+    .catch(err => { throw err })
+    };
+
+export const deleteAccount = async () => {
+  return await axios
+    .delete("/user")
+    .then(res => res)
+    .catch(err => { throw err })
+}

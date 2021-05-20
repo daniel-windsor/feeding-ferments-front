@@ -11,6 +11,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
 
+import Profile from '../profile/Profile'
+
 import { useFirebaseStore } from '../../store'
 
 const UserMenu = () => {
@@ -20,6 +22,11 @@ const UserMenu = () => {
 
   const handleMenu = (e: any) => {
     setAnchorEl(e.currentTarget)
+  }
+
+  const handleProfile = () => {
+    firebaseStore.toggleProfile()
+    setAnchorEl(undefined)
   }
 
   const handleLogOut = () => {
@@ -47,7 +54,7 @@ const UserMenu = () => {
         }}
         keepMounted
       >
-        <MenuItem onClick={() => firebaseStore.setShowProfile(true)}>
+        <MenuItem onClick={handleProfile}>
           <ListItemIcon>
             <PersonIcon />
           </ListItemIcon>
@@ -61,6 +68,9 @@ const UserMenu = () => {
           <ListItemText>Log Out</ListItemText>
         </MenuItem>
       </Menu >
+
+      <Profile />
+
     </>
   )
 }

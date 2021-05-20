@@ -5,7 +5,7 @@ import "firebase/auth";
 
 import RootStore from "./RootStore";
 
-import { login, register } from "../api/auth";
+import { login, signUp } from "../api/auth";
 import { IRegisterCredentials, IUser } from "../types/user";
 
 const firebaseConfig = {
@@ -41,6 +41,7 @@ export default class FirebaseStore {
 
   @observable showAuth = false;
   @observable authType = "";
+  @observable authError: string | undefined = undefined;
   @observable showProfile = false;
 
   // <--- Actions --->
@@ -50,26 +51,48 @@ export default class FirebaseStore {
     this.showAuth = !this.showAuth;
   }
 
-  @action setShowProfile(bool: boolean) {
-    this.showProfile = bool;
+  @action toggleProfile() {
+    this.showProfile = !this.showProfile;
+  }
+
+  @action clearAuthError() {
+    this.authError = undefined;
   }
 
   // <--- Flows --->
 
-  login = flow(function* (this: FirebaseStore, user: any) {
-    this.user = {
-      displayName: user.displayName || "user",
-      email: user.email || "",
-      uid: user.uid,
-    };
+  signUp = flow(function* (this: FirebaseStore, values: IRegisterCredentials) {
+    try {
+      const { data } = yield signUp(values);
 
-    const token = yield firebase.auth().currentUser?.getIdToken();
-    if (token) {
-      localStorage.setItem("token", token);
-      this.rootStore.fermentStore.getAllFerments()
+      if (data) {
+        yield firebase
+          .auth()
+          .signInWithEmailAndPassword(values.email, values.password);
+      }
+    } catch (err) {
+      throw err;
     }
+  });
 
-    console.log("logged in");
+  login = flow(function* (this: FirebaseStore, user: any) {
+    try {
+      this.user = {
+        displayName: user.displayName || "user",
+        email: user.email || "",
+        uid: user.uid,
+      };
+
+      const token = yield firebase.auth().currentUser?.getIdToken();
+      if (token) {
+        localStorage.setItem("token", token);
+        this.rootStore.fermentStore.getAllFerments();
+      }
+
+      console.log("logged in");
+    } catch (err) {
+      throw err;
+    }
   });
 
   logout = flow(function* (this: FirebaseStore) {
@@ -82,18 +105,16 @@ export default class FirebaseStore {
     }
   });
 
-  register = flow(function* (
-    this: FirebaseStore,
-    values: IRegisterCredentials
-  ) {
-    yield register(values);
+  deleteAccount = flow(function* (this: FirebaseStore) {
+    try {
+      const user = firebase.auth().currentUser;
 
-    yield firebase
-      .auth()
-      .signInWithEmailAndPassword(values.email, values.password);
-
-    this.toggleAuth();
-
-    return;
+      user?.delete().then(() => {
+        this.user = undefined;
+        this.toggleProfile();
+      });
+    } catch (err) {
+      throw err
+    }
   });
 }
