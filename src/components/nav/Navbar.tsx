@@ -47,7 +47,7 @@ const Navbar = () => {
           <UserMenu />
         }
 
-        <FermentForm />
+        <FermentForm key={fermentStore.activeFerment?._id} />
       </Toolbar>
     </AppBar>
   )

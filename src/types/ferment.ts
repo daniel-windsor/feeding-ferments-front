@@ -12,10 +12,10 @@ export interface IFerment extends INewFerment {
 }
 
 export enum EFrequency {
-  "daily" = 1,
-  "twoDays" = 2,
-  "threeDays" = 3,
-  "weekly" = 7,
-  "fortnightly" = 14,
+  "daily" = "Daily",
+  "twoDays" = "Every second day",
+  "threeDays" = "Every three days",
+  "weekly" = "Weekly",
+  "fortnightly" = "Fortnightly",
   "monthly" = "Monthly"
 }

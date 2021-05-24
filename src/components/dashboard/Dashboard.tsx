@@ -1,3 +1,5 @@
+import { useEffect } from 'react'
+
 import Container from '@material-ui/core/Container'
 import Fab from '@material-ui/core/Fab'
 import { makeStyles } from '@material-ui/core/styles'
@@ -21,6 +23,12 @@ const useStyles = makeStyles(theme => ({
 const Dashboard = () => {
   const classes = useStyles()
   const fermentStore = useFermentStore()
+
+  useEffect(() => {
+    fermentStore.clearActiveFerment()
+    
+    if (!fermentStore.ferments.length) fermentStore.getAllFerments()
+  }, [])
 
   return (
     <Container className={classes.root}>
