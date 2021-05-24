@@ -24,6 +24,7 @@ const DatePicker = (props: IProps) => {
         label={props.label}
         value={props.value}
         variant="dialog"
+        inputVariant="filled"
         format="dd/MM/yyyy"
         margin="normal"
         onChange={handleDateChange}

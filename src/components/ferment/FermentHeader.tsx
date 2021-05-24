@@ -1,11 +1,12 @@
-import { IFerment } from '../../types/ferment'
 import { useHistory } from 'react-router-dom'
 
 import Paper from '@material-ui/core/Paper'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
 import { makeStyles } from '@material-ui/core/styles'
 
+import { IFerment } from '../../types/ferment'
 import { useFermentStore } from '../../store'
 
 const useStyles = makeStyles(theme => ({
@@ -54,10 +55,10 @@ const FermentDetails = (props: IProps) => {
         <Grid item xs={7} className={classes.headerText}>
           <Typography variant='h2'>{props.name}</Typography>
           <Typography variant='h6'>{props.type}</Typography>
-          <Typography variant='h6'>Date of Birth: </Typography>
+          <Typography variant='h6'>Date of Birth: {fermentStore.dob}</Typography>
         </Grid>
       </Grid>
-      {/* <Button className={classes.danger} onClick={handleDelete}>Delete</Button> */}
+      <Button className={classes.danger} onClick={handleDelete}>Delete</Button>
     </Paper>
   )
 }

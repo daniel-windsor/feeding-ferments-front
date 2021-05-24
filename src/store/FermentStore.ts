@@ -1,4 +1,5 @@
-import { action, flow, makeObservable, observable } from "mobx";
+import { action, computed, flow, makeObservable, observable } from "mobx";
+import { format, add } from 'date-fns'
 import { createFerment, deleteFerment, getAllFerments } from "../api/ferments";
 import { INewFerment, IFerment } from "../types/ferment";
 
@@ -24,6 +25,31 @@ export default class FermentStore {
 
   @action setActiveFerment(fermentId: string) {
     this.activeFerment = this.ferments.find(ferment => ferment._id === fermentId)
+  }
+
+  // <--- Compute --->
+
+  @computed get lastFed() {
+    if (this.activeFerment) {
+      return format(new Date(this.activeFerment.lastFed), "EEEE, do MMMM")
+    }
+
+    return "-"
+  }
+
+  @computed get nextFeed() {
+    if (this.activeFerment) {
+      const date =  add(new Date(this.activeFerment.lastFed), { "days" : 1 })
+      return format(date, "EEEE, do MMMM")
+    }
+
+    return "-"
+  }
+
+  @computed get dob() {
+    if (this.activeFerment) {
+      return format(new Date(this.activeFerment.dob), "EEEE, do MMMM")
+    }
   }
 
   // <--- Flows --->

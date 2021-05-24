@@ -1,5 +1,3 @@
-
-import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
 import { useParams } from 'react-router-dom'
 
@@ -14,7 +12,9 @@ import FermentDirections from './FermentDirections'
 
 const useStyles = makeStyles(theme => ({
   root: {
-    marginTop: theme.spacing(6)
+    marginTop: theme.spacing(6),
+    minHeight: `calc(100% - ${theme.spacing(6) * 2}px)`,
+    boxSizing: "border-box"
   }
 }))
 
@@ -31,14 +31,16 @@ const FermentProfile = () => {
     <Container className={classes.root}>
       <Grid container direction="row" spacing={2}>
         <Grid container item xs={12} md={6} direction="column">
-          <Grid item>
-            {fermentStore.activeFerment &&
-              <FermentHeader {...fermentStore.activeFerment} />
-            }
-          </Grid>
-          <Grid item>
-            <FermentDetails />
-          </Grid>
+          {fermentStore.activeFerment &&
+            <>
+              <Grid item>
+                <FermentHeader {...fermentStore.activeFerment} />
+              </Grid>
+              <Grid item>
+                <FermentDetails {...fermentStore.activeFerment} />
+              </Grid>
+            </>
+          }
         </Grid>
 
         <Grid item xs={12} md={6}>

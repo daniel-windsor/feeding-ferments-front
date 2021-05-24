@@ -34,14 +34,20 @@ let theme = createMuiTheme({
   overrides: {
     MuiFormControl: {
       root: {
-        position: 'relative'
-      }
-    },
-    MuiTextField: {
-      root: {
+        position: 'relative',
+        margin: 0,
         marginBottom: 24,
       },
+      marginNormal: {
+        marginTop: 0,
+        marginBottom: 24
+      }
     },
+    // MuiTextField: {
+    //   root: {
+    //     marginBottom: 24,
+    //   },
+    // },
     MuiFormHelperText: {
       root: {
         position: "absolute",
