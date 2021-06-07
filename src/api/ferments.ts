@@ -18,7 +18,7 @@ export const createFerment = async (ferment: INewFerment) => {
     .catch((err) => err);
 };
 
-export const updateFerment = async (fermentId: String, ferment: INewFerment) => {
+export const updateFerment = async (fermentId: string, ferment: INewFerment) => {
   return await axios
     .patch(`/ferment/${fermentId}`, ferment)
     .then((res) => res)

@@ -11,7 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PersonIcon from '@material-ui/icons/Person';
 
-import Profile from '../profile/Profile'
+import ProfileContainer from '../profile/ProfileContainer'
 
 import { useFirebaseStore } from '../../store'
 
@@ -69,7 +69,7 @@ const UserMenu = () => {
         </MenuItem>
       </Menu >
 
-      <Profile />
+      <ProfileContainer />
 
     </>
   )

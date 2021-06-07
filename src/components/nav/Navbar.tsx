@@ -34,7 +34,7 @@ const Navbar = () => {
         <div style={{ flex: 1 }} />
 
         <Fade timeout={150} in={pathname.includes('ferment')}>
-          <IconButton color="inherit" onClick={() => fermentStore.toggleFermentForm()}>
+          <IconButton color="inherit" onClick={() => fermentStore.setShowFermentForm(true)}>
             <CreateIcon />
           </IconButton>
         </Fade>

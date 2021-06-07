@@ -1,5 +1,5 @@
 import { action, computed, flow, makeObservable, observable } from "mobx";
-import { format, add } from "date-fns";
+import { format, add, formatDistanceToNowStrict } from "date-fns";
 import {
   createFerment,
   updateFerment,
@@ -23,8 +23,8 @@ export default class FermentStore {
 
   // <--- Actions --->
 
-  @action toggleFermentForm() {
-    this.showFermentForm = !this.showFermentForm;
+  @action setShowFermentForm(bool: boolean) {
+    this.showFermentForm = bool;
   }
 
   @action setActiveFerment(fermentId: string) {
@@ -37,14 +37,20 @@ export default class FermentStore {
     this.activeFerment = undefined;
   }
 
+  @action feedFerment() {
+    if (this.activeFerment) {
+      this.activeFerment.lastFed = new Date()
+
+      this.updateFerment(this.activeFerment)
+    }
+  }
+
   // <--- Compute --->
 
   @computed get lastFed() {
     if (this.activeFerment) {
-      return format(new Date(this.activeFerment.lastFed), "EEEE, do MMMM");
+      return format(new Date(this.activeFerment.lastFed), "EEEE do MMMM");
     }
-
-    return "-";
   }
 
   @computed get nextFeed() {
@@ -73,7 +79,9 @@ export default class FermentStore {
       }
 
       const date = add(new Date(this.activeFerment.lastFed), maths);
-      return format(date, "EEEE, do MMMM");
+      const formatted = format(date, "EEEE do MMMM")
+      const distance = formatDistanceToNowStrict(date, { addSuffix: true })
+      return `${formatted} (${distance})`
     }
 
     return "-";
@@ -81,7 +89,13 @@ export default class FermentStore {
 
   @computed get dob() {
     if (this.activeFerment) {
-      return format(new Date(this.activeFerment.dob), "EEEE, do MMMM");
+      return format(new Date(this.activeFerment.dob), "EEEE do MMMM");
+    }
+  }
+
+  @computed get age() {
+    if (this.activeFerment) {
+      return formatDistanceToNowStrict(new Date(this.activeFerment.dob))
     }
   }
 
@@ -100,13 +114,13 @@ export default class FermentStore {
       const { data } = yield createFerment(ferment);
       this.activeFerment = data.ferment;
       this.ferments = [...this.ferments, data.ferment];
-      this.toggleFermentForm();
+      this. showFermentForm = false;
     } catch (err) {
       throw err;
     }
   });
 
-  updateFerment = flow(function* (this: FermentStore, ferment: INewFerment) {
+  updateFerment = flow(function* (this: FermentStore, ferment: INewFerment | IFerment) {
     try {
       if (this.activeFerment) {
         const { data } = yield updateFerment(this.activeFerment._id, ferment);
@@ -117,7 +131,7 @@ export default class FermentStore {
           const index = this.ferments.findIndex(item => item._id === data.ferment._id)
           this.ferments[index] = data.ferment
 
-          this.toggleFermentForm()
+          this.showFermentForm = false
         }
       }
     } catch (err) {

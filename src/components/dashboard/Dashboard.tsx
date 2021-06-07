@@ -34,7 +34,7 @@ const Dashboard = () => {
     <Container className={classes.root}>
       <FermentCardContainer />
 
-      <Fab color='primary' className={classes.fab} onClick={() => fermentStore.toggleFermentForm()}>
+      <Fab color='primary' className={classes.fab} onClick={() => fermentStore.setShowFermentForm(true)}>
         <AddIcon />
       </Fab>
     </Container>

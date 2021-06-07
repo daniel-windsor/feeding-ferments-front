@@ -71,12 +71,12 @@ const FermentForm = () => {
   })
 
   const handleCancel = () => {
-    fermentStore.toggleFermentForm()
+    fermentStore.setShowFermentForm(false)
     formik.resetForm()
   }
 
   const handleDelete = () => {
-    fermentStore.toggleFermentForm()
+    fermentStore.setShowFermentForm(false)
     history.replace('/dashboard')
     activeFerment && fermentStore.deleteFerment(activeFerment._id)
   }
