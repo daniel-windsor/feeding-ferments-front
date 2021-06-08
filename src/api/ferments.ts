@@ -6,7 +6,7 @@ const axios = client();
 
 export const getAllFerments = async () => {
   return await axios
-    .get("ferment")
+    .get("/ferment")
     .then((res) => res)
     .catch((err) => err);
 };

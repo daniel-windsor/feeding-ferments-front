@@ -15,7 +15,7 @@ export const login = async (token: string) => {
 
 export const signUp = async (credentials: IRegisterCredentials) => {
   return await axios
-    .post("/user/signUp", credentials)
+    .post("/user/signup", credentials)
     .then((res) => res)
     .catch(err => { throw err })
     };

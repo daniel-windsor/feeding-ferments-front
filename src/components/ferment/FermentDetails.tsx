@@ -25,7 +25,8 @@ const useStyles = makeStyles(theme => ({
     marginBottom: -theme.spacing(4),
     marginLeft: -theme.spacing(2),
     marginRight: -theme.spacing(2),
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    textAlign: 'right'
   }
 }))
 
@@ -39,7 +40,7 @@ const FermentDetails = (props: IProps) => {
     <Paper className={classes.root}>
       <Grid container spacing={2}>
         <Grid item xs={6}>
-          <Typography className={classes.header}>Date of birth:</Typography>
+          <Typography className={classes.header}>Date of birth</Typography>
           <Typography>{fermentStore.dob}</Typography>
         </Grid>
 
@@ -50,17 +51,17 @@ const FermentDetails = (props: IProps) => {
         </Grid>
 
         <Grid item xs={12}>
-          <Typography className={classes.header}>Last fed:</Typography>
+          <Typography className={classes.header}>Last fed</Typography>
           <Typography>{fermentStore.lastFed}</Typography>
         </Grid>
 
         <Grid item xs={6}>
-          <Typography className={classes.header}>Feed frequency:</Typography>
+          <Typography className={classes.header}>Feed frequency</Typography>
           <Typography>{props.frequency}</Typography>
         </Grid>
 
         <Grid item xs={6}>
-          <Typography className={classes.header}>Next feed due:</Typography>
+          <Typography className={classes.header}>Next feed due</Typography>
           <Typography>{fermentStore.nextFeed}</Typography>
         </Grid>
       </Grid>

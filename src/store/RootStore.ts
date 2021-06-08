@@ -16,9 +16,14 @@ export default class RootStore {
     this.fermentStore = new FermentStore(this)
     
     hydrate("firebase", this.firebaseStore)
+    hydrate("ferment", this.fermentStore)
   }
 
   async hydrateFirebaseStore() {
     await hydrate("firebase", this.firebaseStore)
+  }
+
+  async hydrateFermentStore() {
+    await hydrate("ferment", this.fermentStore)
   }
 }

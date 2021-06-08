@@ -38,7 +38,7 @@ const ProfileContainer = () => {
       open={firebaseStore.showProfile}
       onClose={() => firebaseStore.toggleProfile()}
       className={classes.root}
-      maxWidth="md"
+      maxWidth="sm"
       fullWidth
       fullScreen={mobile}
     >

@@ -1,5 +1,6 @@
 import { action, computed, flow, makeObservable, observable } from "mobx";
 import { format, add, formatDistanceToNowStrict } from "date-fns";
+import { persist } from "mobx-persist";
 import {
   createFerment,
   updateFerment,
@@ -9,6 +10,12 @@ import {
 import { INewFerment, IFerment, EFrequency } from "../types/ferment";
 
 import RootStore from "./RootStore";
+import {
+  createDirection,
+  getAllFermentDirections,
+  getFermentDirections,
+} from "../api/directions";
+import { IDirections, INewDirection } from "../types/directions";
 
 export default class FermentStore {
   constructor(public rootStore: RootStore) {
@@ -17,14 +24,27 @@ export default class FermentStore {
 
   // <--- Observables --->
 
-  @observable showFermentForm = false;
   @observable ferments = Array<IFerment>();
-  @observable activeFerment: IFerment | undefined;
+  @observable directions = Array<IDirections>();
+  @observable activeDirections = Array<IDirections>();
+  @persist("object") @observable activeFerment: IFerment | undefined;
+
+  @observable showFermentForm = false;
+  @observable showDirectionForm = false;
+  @observable directionIndex = 0;
 
   // <--- Actions --->
 
   @action setShowFermentForm(bool: boolean) {
     this.showFermentForm = bool;
+  }
+
+  @action setShowDirectionForm(bool: boolean) {
+    this.showDirectionForm = bool;
+  }
+
+  @action setDirectionIndex(index: number) {
+    this.directionIndex =  index
   }
 
   @action setActiveFerment(fermentId: string) {
@@ -35,13 +55,14 @@ export default class FermentStore {
 
   @action clearActiveFerment() {
     this.activeFerment = undefined;
+    this.activeDirections = [];
   }
 
   @action feedFerment() {
     if (this.activeFerment) {
-      this.activeFerment.lastFed = new Date()
+      this.activeFerment.lastFed = new Date();
 
-      this.updateFerment(this.activeFerment)
+      this.updateFerment(this.activeFerment);
     }
   }
 
@@ -79,9 +100,9 @@ export default class FermentStore {
       }
 
       const date = add(new Date(this.activeFerment.lastFed), maths);
-      const formatted = format(date, "EEEE do MMMM")
-      const distance = formatDistanceToNowStrict(date, { addSuffix: true })
-      return `${formatted} (${distance})`
+      const formatted = format(date, "EEEE do MMMM");
+      const distance = formatDistanceToNowStrict(date, { addSuffix: true });
+      return `${formatted} (${distance})`;
     }
 
     return "-";
@@ -95,7 +116,7 @@ export default class FermentStore {
 
   @computed get age() {
     if (this.activeFerment) {
-      return formatDistanceToNowStrict(new Date(this.activeFerment.dob))
+      return formatDistanceToNowStrict(new Date(this.activeFerment.dob));
     }
   }
 
@@ -109,29 +130,65 @@ export default class FermentStore {
     }
   });
 
-  createFerment = flow(function* (this: FermentStore, ferment: INewFerment) {
+  getAllFermentDirections = flow(function* (this: FermentStore) {
     try {
-      const { data } = yield createFerment(ferment);
-      this.activeFerment = data.ferment;
-      this.ferments = [...this.ferments, data.ferment];
-      this. showFermentForm = false;
+      const { data } = yield getAllFermentDirections();
+      this.directions = data.directions;
     } catch (err) {
       throw err;
     }
   });
 
-  updateFerment = flow(function* (this: FermentStore, ferment: INewFerment | IFerment) {
+  getFermentDirections = flow(function* (
+    this: FermentStore,
+    fermentId: string
+  ) {
+    try {
+      const { data } = yield getFermentDirections(fermentId);
+      this.activeDirections = data.directions;
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  createFerment = flow(function* (this: FermentStore, ferment: INewFerment) {
+    try {
+      const { data } = yield createFerment(ferment);
+      this.activeFerment = data.ferment;
+      this.ferments = [...this.ferments, data.ferment];
+      this.showFermentForm = false;
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  createDirection = flow(function* (this: FermentStore, direction: INewDirection) {
+    try {
+      const { data } = yield createDirection(direction)
+      this.activeDirections = [...this.activeDirections, data.direction]
+      this.directionIndex = this.activeDirections.length - 1
+    } catch (err) {
+      throw err;
+    }
+  })
+
+  updateFerment = flow(function* (
+    this: FermentStore,
+    ferment: INewFerment | IFerment
+  ) {
     try {
       if (this.activeFerment) {
         const { data } = yield updateFerment(this.activeFerment._id, ferment);
 
         if (data.status === "success") {
-          this.activeFerment = data.ferment
+          this.activeFerment = data.ferment;
 
-          const index = this.ferments.findIndex(item => item._id === data.ferment._id)
-          this.ferments[index] = data.ferment
+          const index = this.ferments.findIndex(
+            (item) => item._id === data.ferment._id
+          );
+          this.ferments[index] = data.ferment;
 
-          this.showFermentForm = false
+          this.showFermentForm = false;
         }
       }
     } catch (err) {

@@ -28,7 +28,8 @@ import FermentProfile from './components/ferment/FermentProfile';
 let theme = createMuiTheme({
   props: {
     MuiTextField: {
-      variant: "filled"
+      variant: "filled",
+      fullWidth: true
     },
   },
   overrides: {
@@ -43,11 +44,6 @@ let theme = createMuiTheme({
         marginBottom: 24
       }
     },
-    // MuiTextField: {
-    //   root: {
-    //     marginBottom: 24,
-    //   },
-    // },
     MuiFormHelperText: {
       root: {
         position: "absolute",
@@ -64,6 +60,13 @@ let theme = createMuiTheme({
       root: {
         overflow: 'hidden'
       }
+    },
+    MuiDialog: {
+      root: {
+        maxWidth: 'sm',
+      },
+      
+
     }
   },
   palette: {
