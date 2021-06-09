@@ -43,6 +43,7 @@ const FermentCard = (props: IProps) => {
 
   const handleSelect = () => {
     fermentStore.setActiveFerment(props._id)
+    fermentStore.setActiveDirections(props._id)
     history.push(`/ferment/${props._id}`)
   }
 

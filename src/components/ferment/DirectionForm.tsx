@@ -55,6 +55,7 @@ const DirectionForm = () => {
   const handleCancel = () => {
     fermentStore.setShowDirectionForm(false)
     formik.resetForm()
+    setSuccess(false)
   }
 
   return (

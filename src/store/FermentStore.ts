@@ -14,6 +14,7 @@ import {
   createDirection,
   getAllFermentDirections,
   getFermentDirections,
+  deleteDirection,
 } from "../api/directions";
 import { IDirections, INewDirection } from "../types/directions";
 
@@ -26,7 +27,7 @@ export default class FermentStore {
 
   @observable ferments = Array<IFerment>();
   @observable directions = Array<IDirections>();
-  @observable activeDirections = Array<IDirections>();
+  @persist("object") @observable activeDirections = Array<IDirections>();
   @persist("object") @observable activeFerment: IFerment | undefined;
 
   @observable showFermentForm = false;
@@ -44,13 +45,17 @@ export default class FermentStore {
   }
 
   @action setDirectionIndex(index: number) {
-    this.directionIndex =  index
+    this.directionIndex = index;
   }
 
   @action setActiveFerment(fermentId: string) {
     this.activeFerment = this.ferments.find(
       (ferment) => ferment._id === fermentId
     );
+  }
+
+  @action setActiveDirections(fermentId: string) {
+    this.activeDirections = this.directions.filter(direction => direction.fermentId === fermentId)
   }
 
   @action clearActiveFerment() {
@@ -162,15 +167,18 @@ export default class FermentStore {
     }
   });
 
-  createDirection = flow(function* (this: FermentStore, direction: INewDirection) {
+  createDirection = flow(function* (
+    this: FermentStore,
+    direction: INewDirection
+  ) {
     try {
-      const { data } = yield createDirection(direction)
-      this.activeDirections = [...this.activeDirections, data.direction]
-      this.directionIndex = this.activeDirections.length - 1
+      const { data } = yield createDirection(direction);
+      this.activeDirections = [...this.activeDirections, data.direction];
+      this.directionIndex = this.activeDirections.length - 1;
     } catch (err) {
       throw err;
     }
-  })
+  });
 
   updateFerment = flow(function* (
     this: FermentStore,
@@ -203,6 +211,20 @@ export default class FermentStore {
       );
 
       yield deleteFerment(fermentId);
+    } catch (err) {
+      throw err;
+    }
+  });
+
+  deleteDirection = flow(function* (this: FermentStore) {
+    try {
+      const directionId = this.activeDirections[this.directionIndex]._id;
+      const directionIndex = this.directionIndex;
+      this.directionIndex = 0;
+
+      this.activeDirections.splice(directionIndex, 1);
+
+      yield deleteDirection(directionId);
     } catch (err) {
       throw err;
     }

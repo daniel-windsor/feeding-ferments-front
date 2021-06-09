@@ -27,7 +27,11 @@ const Dashboard = () => {
   useEffect(() => {
     fermentStore.clearActiveFerment()
     
-    if (!fermentStore.ferments.length) fermentStore.getAllFerments()
+    if (!fermentStore.ferments.length || !fermentStore.directions.length) {
+      fermentStore.getAllFerments()
+      fermentStore.getAllFermentDirections()
+      console.log('fetch data')
+    }
   }, [])
 
   return (

@@ -24,3 +24,10 @@ export const createDirection = async (direction: INewDirection) => {
     .then((res) => res)
     .catch((err) => err);
 };
+
+export const deleteDirection = async (directionId: string) => {
+  return await axios
+    .delete(`/directions/${directionId}`)
+    .then((res) => res)
+    .catch((err) => err);
+};

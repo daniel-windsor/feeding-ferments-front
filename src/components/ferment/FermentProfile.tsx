@@ -1,6 +1,4 @@
-import { useEffect } from 'react'
 import { observer } from 'mobx-react-lite'
-import { useParams } from 'react-router-dom'
 
 import Container from '@material-ui/core/Container'
 import Grid from '@material-ui/core/Grid'
@@ -20,18 +18,9 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-type FermentParams = {
-  fermentId: string
-}
-
 const FermentProfile = () => {
   const fermentStore = useFermentStore()
   const classes = useStyles()
-  const { fermentId } = useParams<FermentParams>()
-
-  useEffect(() => {
-    fermentStore.getFermentDirections(fermentId)
-  }, [])
 
   return (
     <Container className={classes.root}>
@@ -50,7 +39,7 @@ const FermentProfile = () => {
         </Grid>
 
         <Grid item xs={12} md={6}>
-          <FermentDirections {...fermentStore.activeDirections} />
+          <FermentDirections />
         </Grid>
       </Grid>
 

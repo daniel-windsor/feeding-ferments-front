@@ -41,35 +41,38 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-interface IProps extends Array<IDirections> { }
-
-const FermentDirections = (props: IProps) => {
+const FermentDirections = () => {
   const classes = useStyles()
   const fermentStore = useFermentStore()
-  const { directionIndex } = fermentStore
+  const { directionIndex, activeDirections } = fermentStore
 
   const handleChangeTab = (e: React.ChangeEvent<{}>, value: number) => {
     fermentStore.setDirectionIndex(value)
   }
 
-  console.log(directionIndex)
-
   return (
     <Paper className={classes.root}>
-      <Tabs value={directionIndex} onChange={handleChangeTab} className={classes.tabs} variant="scrollable" scrollButtons="auto">
-        {fermentStore.activeDirections.map(direction => (
+      <Tabs
+        value={directionIndex}
+        onChange={handleChangeTab}
+        className={classes.tabs}
+        variant="scrollable"
+        scrollButtons="auto"
+      >
+        {activeDirections.map(direction => (
           <Tab label={direction.title} key={direction.index} />
         ))}
       </Tabs>
 
       <div className={classes.tabContent}>
         <div className={classes.textContainer}>
-          {props[directionIndex] &&
-            <Typography variant="body1">{props[directionIndex].direction}</Typography>
+          {activeDirections[directionIndex] &&
+            <Typography variant="body1">{activeDirections[directionIndex].direction}</Typography>
           }
         </div>
 
         <div className={classes.buttonBar}>
+          <Button variant="outlined" onClick={() => fermentStore.deleteDirection()}>Delete</Button>
           <Button variant="outlined" color="inherit" onClick={() => fermentStore.setShowDirectionForm(true)}>Add Directions</Button>
         </div>
       </div>

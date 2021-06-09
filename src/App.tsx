@@ -65,8 +65,11 @@ let theme = createMuiTheme({
       root: {
         maxWidth: 'sm',
       },
-      
-
+    },
+    MuiTypography: {
+      root: {
+        whiteSpace: "pre"
+      }
     }
   },
   palette: {
